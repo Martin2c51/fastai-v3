@@ -9,29 +9,29 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 
-export_file_url = 'https://www.dropbox.com/s/srag9ceylapyr4h/export.pkl?raw=1'
-export_file_name = 'export.pkl'
+# export_file_url = 'https://www.dropbox.com/s/srag9ceylapyr4h/export.pkl?raw=1'
+# export_file_name = 'export.pkl'
 
-path = Path(__file__).parent
+# path = Path(__file__).parent
 
 app = Starlette()
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
 app.mount('/static', StaticFiles(directory='app/static'))
 
 
-async def download_file(url, dest):
-    if dest.exists(): return
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
-            data = await response.read()
-            with open(dest, 'wb') as f:
-                f.write(data)
+# async def download_file(url, dest):
+#     if dest.exists(): return
+#     async with aiohttp.ClientSession() as session:
+#         async with session.get(url) as response:
+#             data = await response.read()
+#             with open(dest, 'wb') as f:
+#                 f.write(data)
 
 
 async def setup_learner():
-    await download_file(export_file_url, path / export_file_name)
+#     await download_file(export_file_url, path / export_file_name)
     try:
-        learn = load_learner(path, export_file_name)
+        learn = load_learner("export.pkl")
         return learn
     except RuntimeError as e:
         if len(e.args) > 0 and 'CPU-only machine' in e.args[0]:
@@ -41,7 +41,7 @@ async def setup_learner():
         else:
             raise
 
-#learn = load_learner("")
+learn = load_learner("export.pkl")
 
 loop = asyncio.get_event_loop()
 tasks = [asyncio.ensure_future(setup_learner())]
