@@ -41,7 +41,7 @@ app.mount('/static', StaticFiles(directory='app/static'))
 #         else:
 #             raise
 
-learn = load_learner("models/")
+learn = load_learner("export.pkl")
 
 loop = asyncio.get_event_loop()
 tasks = [asyncio.ensure_future(setup_learner())]
